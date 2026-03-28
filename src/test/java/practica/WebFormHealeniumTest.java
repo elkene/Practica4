@@ -13,11 +13,19 @@ public class WebFormHealeniumTest {
 
     @BeforeEach
     void setUp() {
+        System.setProperty("heal-enabled", "true");
+        System.setProperty("hlm.server.url", "http://localhost:7878");
+        System.setProperty("hlm.imitator.url", "http://localhost:8000");
+
+
         WebDriverManager.chromedriver().setup();
         WebDriver delegate = new ChromeDriver();
         delegate.manage().window().maximize();
-        // Envolver el driver con Healenium
+        System.setProperty("healenium.healing.enabled", "true");
+
         driver = SelfHealingDriver.create(delegate);
+
+        System.out.println("Healing enabled: " + System.getProperty("healenium.healing.enabled"));
     }
 
     @Test
@@ -31,16 +39,15 @@ public class WebFormHealeniumTest {
         driver.findElement(By.name("my-password")).sendKeys("pass1234");
 
         driver.findElement(By.name("my-textarea")).sendKeys("Prueba con Healenium activo.");
+        Thread.sleep(1200);
 
         Select dropdown = new Select(driver.findElement(By.name("my-select")));
         dropdown.selectByVisibleText("Two");
 
-        // LOCATOR INTENCIONALMENTE MODIFICADO
-        // Original: By.id("my-check-1")
-        // Modificado: By.id("my-check-BROKEN")  <-- esto es el id roto
-        WebElement checkbox = driver.findElement(By.id("my-check-BROKEN"));
-        if (!checkbox.isSelected()) checkbox.click();
-        System.out.println("[Healenium]  Checkbox encontrado via self-healing");
+
+
+        WebElement checkbox = driver.findElement(By.id("my-check-1"));
+        checkbox.click();
 
         driver.findElement(By.id("my-radio-1")).click();
 

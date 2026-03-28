@@ -1,43 +1,48 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  db:
-    image: postgres:15
-    container_name: healenium-db
-    environment:
-      POSTGRES_DB: healenium
-      POSTGRES_USER: healenium_user
-      POSTGRES_PASSWORD: healenium_pass
+  postgres-db:
+    image: postgres:15.5-alpine
+    container_name: postgres-db
+    restart: always
     ports:
       - "5432:5432"
+    volumes:
+      - ./db/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=healenium
+      - POSTGRES_USER=healenium_user
+      - POSTGRES_PASSWORD=healenium_pass
     networks:
-      - healenium-net
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U healenium_user -d healenium"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - healenium
 
   healenium:
-    image: healenium/hlm-backend:3.4.4
-    container_name: healenium-backend
+    image: healenium/hlm-backend:3.4.6
+    container_name: healenium
+    restart: on-failure
     ports:
       - "7878:7878"
+      - "8080:8080"
+    links:
+      - postgres-db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/healenium?currentSchema=public
-      SPRING_DATASOURCE_USERNAME: healenium_user
-      SPRING_DATASOURCE_PASSWORD: healenium_pass
-
-      SPRING_LIQUIBASE_ENABLED: true
-      SPRING_LIQUIBASE_DEFAULT_SCHEMA: public
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-    depends_on:
-      db:
-        condition: service_healthy
+      - SPRING_POSTGRES_DB=healenium
+      - SPRING_POSTGRES_SCHEMA=healenium
+      - SPRING_POSTGRES_USER=healenium_user
+      - SPRING_POSTGRES_PASSWORD=healenium_pass
+      - SPRING_POSTGRES_DB_HOST=postgres-db
     networks:
-      - healenium-net
+      - healenium
+
+  selector-imitator:
+    image: healenium/hlm-selector-imitator:1.4
+    container_name: selector-imitator
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    networks:
+      - healenium
 
 networks:
-  healenium-net:
-    driver: bridge
-
+  healenium:
+    name: healenium
