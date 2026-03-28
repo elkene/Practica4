@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  healenium:
+    image: healenium/hlm-backend:3.4.4
+    platform: linux/amd64
+    ports:
+      - "7878:7878"
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=healenium
+      - DB_USER=healenium_user
+      - DB_PASS=healenium_pass
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=healenium
+      - POSTGRES_USER=healenium_user
+      - POSTGRES_PASSWORD=healenium_pass
+    ports:
+      - "5432:5432"
