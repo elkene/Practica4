@@ -1,24 +1,43 @@
 version: "3.8"
+
 services:
-  healenium:
-    image: healenium/hlm-backend:3.4.4
-    platform: linux/amd64
-    ports:
-      - "7878:7878"
-      - "8080:8080"
-    environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_NAME=healenium
-      - DB_USER=healenium_user
-      - DB_PASS=healenium_pass
-    depends_on:
-      - db
   db:
     image: postgres:15
+    container_name: healenium-db
     environment:
-      - POSTGRES_DB=healenium
-      - POSTGRES_USER=healenium_user
-      - POSTGRES_PASSWORD=healenium_pass
+      POSTGRES_DB: healenium
+      POSTGRES_USER: healenium_user
+      POSTGRES_PASSWORD: healenium_pass
     ports:
       - "5432:5432"
+    networks:
+      - healenium-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healenium_user -d healenium"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  healenium:
+    image: healenium/hlm-backend:3.4.4
+    container_name: healenium-backend
+    ports:
+      - "7878:7878"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/healenium?currentSchema=public
+      SPRING_DATASOURCE_USERNAME: healenium_user
+      SPRING_DATASOURCE_PASSWORD: healenium_pass
+
+      SPRING_LIQUIBASE_ENABLED: true
+      SPRING_LIQUIBASE_DEFAULT_SCHEMA: public
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - healenium-net
+
+networks:
+  healenium-net:
+    driver: bridge
+

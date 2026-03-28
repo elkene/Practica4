@@ -7,40 +7,49 @@
     <groupId>org.UABC</groupId>
     <artifactId>Clase_0</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <dependencies><!-- Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+
+    <dependencies>
+
+        <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.31.0</version>
-            <scope>compile</scope>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+        <!-- WebDriverManager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>6.1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.10.2</version>
-            <scope>test</scope>
         </dependency>
 
+        <!-- Healenium — misma versión que la imagen de Docker -->
         <dependency>
             <groupId>com.epam.healenium</groupId>
             <artifactId>healenium-web</artifactId>
-            <version>3.6.0</version> <!-- Revisa la última versión -->
+            <version>3.4.4</version>
+        </dependency>
+
+        <!-- JUnit 5 — para @Test, @BeforeEach, @AfterEach -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.11.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.11.3</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
 
-
     <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
