@@ -23,10 +23,10 @@ public class WebFormHealeniumTest {
     @Test
     void llenarFormularioConHealenium() throws InterruptedException {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/web-form.html");
-        System.out.println("[Healenium] ✔ Pagina abierta");
+        System.out.println("[Healenium]  Pagina abierta");
 
         driver.findElement(By.name("my-text")).sendKeys("Kenneth");
-        System.out.println("[Healenium] ✔ Text input llenado");
+        System.out.println("[Healenium]  Text input llenado");
 
         driver.findElement(By.name("my-password")).sendKeys("pass1234");
 
@@ -40,17 +40,17 @@ public class WebFormHealeniumTest {
         // Modificado: By.id("my-check-BROKEN")  <-- esto es el id roto
         WebElement checkbox = driver.findElement(By.id("my-check-BROKEN"));
         if (!checkbox.isSelected()) checkbox.click();
-        System.out.println("[Healenium] ✔ Checkbox encontrado via self-healing");
+        System.out.println("[Healenium]  Checkbox encontrado via self-healing");
 
         driver.findElement(By.id("my-radio-1")).click();
 
         driver.findElement(By.name("my-date")).sendKeys("03/27/2026");
 
         driver.findElement(By.cssSelector("button[type='submit']")).click();
-        System.out.println("[Healenium] ✔ Submit ejecutado");
+        System.out.println("[Healenium]  Submit ejecutado");
 
         Thread.sleep(2000);
-        System.out.println("[Healenium] ✔ TEST FINALIZADO");
+        System.out.println("[Healenium]  TEST FINALIZADO");
     }
 
     @AfterEach
